@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover"
+  />
+
+  <meta name="theme-color" content="#eef7ff" />
+
+  <!-- منع ظهور الرابط في محركات البحث -->
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex" />
+
+  <title>استقبال يس</title>
+
+  <style>
+    :root {
+      --blue: #78acd8;
+      --blue-dark: #4d86b8;
+      --deep: #356b97;
+      --text: #617e94;
+      --light: #eef7ff;
+      --white: #ffffff;
+      --border: #dcebf6;
+      --shadow: 0 18px 45px rgba(60, 108, 150, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+
+      background: #dceaf6;
+
+      font-family:
+        "Geeza Pro",
+        "Noto Naskh Arabic",
+        Tahoma,
+        Arial,
+        sans-serif;
+
+      color: var(--text);
+    }
+
+    body {
+      overscroll-behavior: none;
+    }
+
+    button,
+    a {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    #app {
+      position: relative;
+
+      width: min(100vw, 500px);
+      height: 100dvh;
+
+      margin: auto;
+
+      overflow: hidden;
+
+      background: var(--light);
+
+      box-shadow: 0 0 60px rgba(40, 80, 115, 0.15);
+    }
+
+    @media (max-width: 500px) {
+      #app {
+        width: 100vw;
+        box-shadow: none;
+      }
+    }
+
+    .screen {
+      position: absolute;
+      inset: 0;
+    }
+
+    /* =========================
+       الغلاف
+    ========================= */
+
+    #coverScreen {
+      z-index: 100;
+      background: var(--light);
+    }
+
+    #coverScreen img {
+      display: block;
+
+      width: 100%;
+      height: 100%;
+
+      object-fit: cover;
+    }
+
+    /* المنطقة الشفافة التي يضغط عليها المستخدم */
+    #openButton {
+      position: absolute;
+
+      left: 18%;
+      right: 18%;
+
+      top: 39%;
+      height: 38%;
+
+      border: none;
+      background: transparent;
+
+      border-radius: 999px;
+
+      z-index: 3;
+    }
+
+    .tapPulse {
+      position: absolute;
+
+      left: 50%;
+      top: 57%;
+
+      width: 65px;
+      height: 65px;
+
+      transform: translate(-50%, -50%);
+
+      border-radius: 50%;
+
+      border: 1.5px solid rgba(83, 145, 197, 0.35);
+
+      pointer-events: none;
+
+      animation: pulse 1.8s ease-out infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: translate(-50%, -50%) scale(0.7);
+        opacity: 0;
+      }
+
+      35% {
+        opacity: 0.85;
+      }
+
+      100% {
+        transform: translate(-50%, -50%) scale(1.7);
+        opacity: 0;
+      }
+    }
+
+    /* =========================
+       فيديوهات البداية
+    ========================= */
+
+    #videoScreen {
+      z-index: 90;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      background: var(--light);
+    }
+
+    #openingVideo {
+      width: 100%;
+      height: 100%;
+
+      object-fit: contain;
+
+      background: var(--light);
+    }
+
+    #soundButton {
+      position: absolute;
+
+      left: 50%;
+
+      bottom: max(
+        20px,
+        env(safe-area-inset-bottom)
+      );
+
+      transform: translateX(-50%);
+
+      border: none;
+
+      padding: 11px 18px;
+
+      border-radius: 999px;
+
+      color: white;
+
+      background: rgba(49, 82, 108, 0.62);
+
+      backdrop-filter: blur(10px);
+
+      z-index: 5;
+    }
+
+    /* =========================
+       الكرت
+    ========================= */
+
+    #invitation {
+      z-index: 50;
+
+      display: none;
+
+      position: absolute;
+      inset: 0;
+
+      overflow-y: auto;
+      overflow-x: hidden;
+
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+
+      overscroll-behavior-y: contain;
+
+      scrollbar-width: none;
+
+      background: var(--light);
+    }
+
+    #invitation::-webkit-scrollbar {
+      display: none;
+    }
+
+    .page {
+      position: relative;
+
+      height: 100dvh;
+      min-height: 100dvh;
+
+      scroll-snap-align: start;
+      scroll-snap-stop: always;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      overflow: hidden;
+
+      padding:
+        max(22px, env(safe-area-inset-top))
+        20px
+        max(26px, env(safe-area-inset-bottom));
+
+      background:
+        radial-gradient(
+          circle at 15% 15%,
+          rgba(255, 255, 255, 0.95) 0 6%,
+          transparent 6.5%
+        ),
+        radial-gradient(
+          circle at 85% 80%,
+          rgba(255, 255, 255, 0.78) 0 8%,
+          transparent 8.5%
+        ),
+        linear-gradient(
+          180deg,
+          #edf6ff 0%,
+          #fbfdff 100%
+        );
+    }
+
+    .page::before {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      pointer-events: none;
+
+      opacity: 0.22;
+
+      background-image:
+        radial-gradient(
+          circle,
+          #8eb8d8 0 1.2px,
+          transparent 1.8px
+        );
+
+      background-size: 95px 95px;
+    }
+
+    .inner {
+      position: relative;
+
+      z-index: 2;
+
+      width: 100%;
+      max-width: 440px;
+
+      text-align: center;
+    }
+
+    .smallTitle {
+      margin-bottom: 6px;
+
+      font-size: 13px;
+
+      color: #96adbe;
+    }
+
+    .babyName {
+      margin: 0 0 14px;
+
+      font-family:
+        "Diwan Thuluth",
+        "Noto Naskh Arabic",
+        "Geeza Pro",
+        serif;
+
+      font-size: 92px;
+      font-weight: 400;
+
+      line-height: 1;
+
+      color: #639bcf;
+
+      text-shadow:
+        0 7px 22px rgba(82, 137, 185, 0.12);
+    }
+
+    .lead {
+      margin: 0;
+
+      font-size: 18px;
+      line-height: 2;
+
+      color: #5f7c91;
+    }
+
+    .scrollHint {
+      margin-top: 30px;
+
+      font-size: 12px;
+
+      color: #9bb0c0;
+
+      animation: bob 1.7s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      50% {
+        transform: translateY(7px);
+      }
+    }
+
+    .card {
+      padding: 24px 18px;
+
+      border: 1px solid rgba(111, 168, 216, 0.22);
+
+      border-radius: 28px;
+
+      background: rgba(255, 255, 255, 0.91);
+
+      box-shadow: var(--shadow);
+
+      backdrop-filter: blur(12px);
+    }
+
+    .pageTitle {
+      margin: 0 0 18px;
+
+      font-size: 26px;
+      font-weight: 500;
+
+      color: var(--deep);
+    }
+
+    .subtitle {
+      margin: -9px 0 17px;
+
+      font-size: 12px;
+
+      color: #9cb1c1;
+    }
+
+    /* بطاقة البشارة */
+
+    .detailsGrid {
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 10px;
+    }
+
+    .detailBox {
+      min-height: 105px;
+
+      display: grid;
+      place-items: center;
+
+      padding: 15px 8px;
+
+      border-radius: 19px;
+
+      border: 1px solid #e0edf7;
+
+      background: #f8fbff;
+    }
+
+    .detailBox span {
+      font-size: 11px;
+
+      color: #93a9ba;
+    }
+
+    .detailBox strong {
+      display: block;
+
+      margin-top: 5px;
+
+      font-size: 17px;
+
+      color: #47759a;
+    }
+
+    /* صورة */
+
+    .imageCard {
+      overflow: hidden;
+      padding: 0;
+    }
+
+    .imageCard img {
+      display: block;
+
+      width: 100%;
+      height: min(72dvh, 610px);
+
+      object-fit: cover;
+    }
+
+    /* كلمة الأهل */
+
+    .familyText {
+      margin: 0;
+
+      font-size: 16px;
+
+      line-height: 2.15;
+
+      color: #607b8f;
+    }
+
+    .familyText strong {
+      color: #356d99;
+    }
+
+    /* العد التنازلي */
+
+    .countdown {
+      display: grid;
+
+      grid-template-columns: repeat(4, 1fr);
+
+      gap: 7px;
+
+      direction: ltr;
+    }
+
+    .timeBox {
+      padding: 16px 4px;
+
+      border-radius: 20px;
+
+      border: 1px solid #dce9f4;
+
+      background:
+        linear-gradient(
+          #ffffff,
+          #f3f9fe
+        );
+    }
+
+    .timeBox strong {
+      display: block;
+
+      font-size: 24px;
+
+      color: #326b9b;
+    }
+
+    .timeBox span {
+      font-size: 10px;
+
+      color: #91a8ba;
+    }
+
+    /* برنامج الاستقبال */
+
+    .program {
+      display: grid;
+
+      gap: 10px;
+
+      text-align: right;
+    }
+
+    .programRow {
+      display: flex;
+
+      align-items: center;
+
+      gap: 11px;
+
+      padding: 12px 13px;
+
+      border-radius: 18px;
+
+      border: 1px solid #e2edf7;
+
+      background: #f8fbff;
+    }
+
+    .iconCircle {
+      width: 42px;
+      height: 42px;
+
+      flex: 0 0 42px;
+
+      display: grid;
+      place-items: center;
+
+      border-radius: 50%;
+
+      background: #eaf4fd;
+    }
+
+    .programRow strong {
+      display: block;
+
+      font-size: 14px;
+
+      color: #47749a;
+    }
+
+    .programRow small {
+      display: block;
+
+      margin-top: 2px;
+
+      font-size: 11px;
+
+      color: #95aabb;
+    }
+
+    /* الموقع */
+
+    .venue {
+      margin: 5px 0 18px;
+
+      font-size: 30px;
+
+      color: #386d98;
+    }
+
+    .mapButton {
+      display: inline-flex;
+
+      align-items: center;
+      justify-content: center;
+
+      gap: 7px;
+
+      min-height: 50px;
+
+      padding: 12px 22px;
+
+      border-radius: 999px;
+
+      text-decoration: none;
+
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          var(--blue),
+          var(--blue-dark)
+        );
+
+      box-shadow:
+        0 11px 24px rgba(67, 124, 174, 0.22);
+    }
+
+    /* الخاتمة */
+
+    .finalHeart {
+      font-size: 34px;
+
+      color: #79a8cf;
+    }
+
+    .finalTitle {
+      margin: 10px 0;
+
+      font-size: 28px;
+      font-weight: 500;
+
+      color: #3e709a;
+    }
+
+    .finalText {
+      font-size: 16px;
+
+      line-height: 2;
+
+      color: #708ba0;
+    }
+
+    /* نقاط التنقل */
+
+    #dots {
+      position: fixed;
+
+      z-index: 60;
+
+      left: 10px;
+      top: 50%;
+
+      transform: translateY(-50%);
+
+      display: none;
+
+      flex-direction: column;
+
+      gap: 8px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+
+      border-radius: 50%;
+
+      background: rgba(93, 144, 184, 0.28);
+
+      transition: 0.25s;
+    }
+
+    .dot.active {
+      height: 18px;
+
+      border-radius: 8px;
+
+      background: #72a8d5;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="app">
+
+  <!-- ======================
+       الغلاف
+  ======================= -->
+
+  <section
+    id="coverScreen"
+    class="screen"
+  >
+    <img
+      src="cover.png"
+      alt="استقبال يس"
+    />
+
+    <button
+      id="openButton"
+      aria-label="المس يد يس"
+    ></button>
+
+    <div class="tapPulse"></div>
+  </section>
+
+
+  <!-- ======================
+       فيديوهات البداية
+  ======================= -->
+
+  <section
+    id="videoScreen"
+    class="screen hidden"
+  >
+    <video
+      id="openingVideo"
+      playsinline
+      webkit-playsinline
+      preload="auto"
+      disablepictureinpicture
+    ></video>
+
+    <button
+      id="soundButton"
+      class="hidden"
+      type="button"
+    >
+      المس لتشغيل الصوت
+    </button>
+  </section>
+
+
+  <!-- ======================
+       الكرت
+  ======================= -->
+
+  <main id="invitation">
+
+
+    <!-- الصفحة 1 -->
+
+    <section class="page">
+      <div class="inner">
+
+        <div class="smallTitle">
+          بُشرى سارة
+        </div>
+
+        <h1 class="babyName">
+          يس
+        </h1>
+
+        <p class="lead">
+          أهلًا بصغيرنا الجميل
+          <br />
+          نورت الدنيا وفرحت قلوبنا
+        </p>
+
+        <div class="scrollHint">
+          اسحب للأعلى للمتابعة ↑
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- الصفحة 2 -->
+
+    <section class="page">
+      <div class="inner card">
+
+        <h2 class="pageTitle">
+          بطاقة البشارة
+        </h2>
+
+        <div class="subtitle">
+          الحمد لله الذي بنعمته تتم الصالحات
+        </div>
+
+        <div class="detailsGrid">
+
+          <div class="detailBox">
+            <span>
+              اسم المولود
+            </span>
+
+            <strong>
+              يس
+            </strong>
+          </div>
+
+
+          <div class="detailBox">
+            <span>
+              تاريخ الميلاد
+            </span>
+
+            <strong>
+              5 / 7 / 2027
+            </strong>
+          </div>
+
+
+          <div class="detailBox">
+            <span>
+              تاريخ الاستقبال
+            </span>
+
+            <strong>
+              7 / 7 / 2027
+            </strong>
+          </div>
+
+
+          <div class="detailBox">
+            <span>
+              الساعة
+            </span>
+
+            <strong>
+              7:00 مساءً
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- الصفحة 3 -->
+
+    <section class="page">
+      <div class="inner card imageCard">
+
+        <img
+          src="baby-card.png"
+          alt="بشارة يس"
+        />
+
+      </div>
+    </section>
+
+
+    <!-- الصفحة 4 -->
+
+    <section class="page">
+      <div class="inner card">
+
+        <h2 class="pageTitle">
+          كلمة الأهل
+        </h2>
+
+        <p class="familyText">
+          بقلوب تفيض بالحمد والفرح،
+          رزقنا الله صغيرًا ملأ بيتنا نورًا.
+          يسعدنا أن تشاركونا فرحتنا
+          بقدوم
+          <strong>يس</strong>
+          ونسألكم له الدعاء
+          بالبركة والعمر الجميل.
+        </p>
+
+      </div>
+    </section>
+
+
+    <!-- الصفحة 5 -->
+
+    <section class="page">
+      <div class="inner card">
+
+        <h2 class="pageTitle">
+          يبدأ استقبال يس بعد
+        </h2>
+
+        <div class="countdown">
+
+          <div class="timeBox">
+            <strong id="days">
+              --
+            </strong>
+
+            <span>
+              يوم
+            </span>
+          </div>
+
+
+          <div class="timeBox">
+            <strong id="hours">
+              --
+            </strong>
+
+            <span>
+              ساعة
+            </span>
+          </div>
+
+
+          <div class="timeBox">
+            <strong id="minutes">
+              --
+            </strong>
+
+            <span>
+              دقيقة
+            </span>
+          </div>
+
+
+          <div class="timeBox">
+            <strong id="seconds">
+              --
+            </strong>
+
+            <span>
+              ثانية
+            </span>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- الصفحة 6 -->
+
+    <section class="page">
+      <div class="inner card">
+
+        <h2 class="pageTitle">
+          برنامج الاستقبال
+        </h2>
+
+        <div class="program">
+
+
+          <div class="programRow">
+
+            <div class="iconCircle">
+              ♡
+            </div>
+
+            <div>
+
+              <strong>
+                7:00 مساءً — استقبال الضيوف
+              </strong>
+
+              <small>
+                أهلًا وسهلًا بكم
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="programRow">
+
+            <div class="iconCircle">
+              📷
+            </div>
+
+            <div>
+
+              <strong>
+                7:30 مساءً — صور وذكريات
+              </strong>
+
+              <small>
+                لحظات جميلة نحتفظ بها معًا
+              </small>
+
+            </div>
+
+          </div>
+
+
+          <div class="programRow">
+
+            <div class="iconCircle">
+              ✦
+            </div>
+
+            <div>
+
+              <strong>
+                8:00 مساءً — الضيافة والحلو
+              </strong>
+
+              <small>
+                بكل الحب نشارككم فرحتنا
+              </small>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- الصفحة 7 -->
+
+    <section class="page">
+
+      <div class="inner card">
+
+        <h2 class="pageTitle">
+          الموقع
+        </h2>
+
+        <div class="venue">
+          قاعة إيلياء
+        </div>
+
+        <a
+          class="mapButton"
+          href="https://www.google.com/maps/search/?api=1&query=%D9%82%D8%A7%D8%B9%D8%A9+%D8%A5%D9%8A%D9%84%D9%8A%D8%A7%D8%A1"
+          target="_blank"
+          rel="noopener"
+        >
+          📍 فتح الموقع على الخريطة
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- الصفحة 8 -->
+
+    <section class="page">
+
+      <div class="inner">
+
+        <div class="finalHeart">
+          ♡
+        </div>
+
+        <h2 class="finalTitle">
+          بانتظاركم لمشاركتنا فرحتنا
+        </h2>
+
+        <p class="finalText">
+          وجودكم يزيد فرحتنا جمالًا
+          <br />
+          أهلًا وسهلًا بكم في استقبال يس
+        </p>
+
+      </div>
+
+    </section>
+
+
+  </main>
+
+
+  <div id="dots"></div>
+
+
+</div>
+
+
+<script>
+
+(function () {
+
+  const coverScreen =
+    document.getElementById("coverScreen");
+
+  const openButton =
+    document.getElementById("openButton");
+
+  const videoScreen =
+    document.getElementById("videoScreen");
+
+  const openingVideo =
+    document.getElementById("openingVideo");
+
+  const soundButton =
+    document.getElementById("soundButton");
+
+  const invitation =
+    document.getElementById("invitation");
+
+  const dotsContainer =
+    document.getElementById("dots");
+
+  const pages =
+    Array.from(
+      document.querySelectorAll(".page")
+    );
+
+
+  /* =========================
+     ترتيب الفيديوهات
+  ========================= */
+
+  const videos = [
+
+    {
+      src: "hand-video.mp4",
+
+      /*
+      فيديو اليد:
+      خليه صامت بالبداية
+      لأنه أول ضغطة المستخدم
+      تسمح بتشغيل الفيديو
+      */
+      muted: true
+    },
+
+    {
+      src: "intro-video.mp4",
+
+      /*
+      الفيديو الثاني
+      نحاول تشغيله بصوت
+      */
+      muted: false
+    }
+
+  ];
+
+
+  let currentVideo = 0;
+
+  let sequenceStarted = false;
+
+
+  /* =========================
+     نقاط صفحات الكرت
+  ========================= */
+
+  pages.forEach(function () {
+
+    const dot =
+      document.createElement("span");
+
+    dot.className = "dot";
+
+    dotsContainer.appendChild(dot);
+
+  });
+
+
+  const dots =
+    Array.from(
+      dotsContainer.children
+    );
+
+
+  function activateDot(index) {
+
+    dots.forEach(function (
+      dot,
+      dotIndex
+    ) {
+
+      dot.classList.toggle(
+        "active",
+        dotIndex === index
+      );
+
+    });
+
+  }
+
+
+  /* =========================
+     تشغيل الفيديو الحالي
+  ========================= */
+
+  async function playCurrentVideo() {
+
+    const item =
+      videos[currentVideo];
+
+    openingVideo.pause();
+
+    openingVideo.src =
+      item.src;
+
+    openingVideo.currentTime =
+      0;
+
+    openingVideo.controls =
+      false;
+
+    openingVideo.muted =
+      item.muted;
+
+    openingVideo.load();
+
+    soundButton.classList.add(
+      "hidden"
+    );
+
+
+    try {
+
+      await openingVideo.play();
+
+    }
+
+    catch (error) {
+
+      /*
+      إذا المتصفح منع الصوت،
+      نشغله صامت
+      ونظهر زر الصوت
+      */
+
+      openingVideo.muted =
+        true;
+
+
+      try {
+
+        await openingVideo.play();
+
+      }
+
+      catch (secondError) {
+
+        console.log(
+          "تعذر تشغيل الفيديو تلقائيًا"
+        );
+
+      }
+
+
+      if (currentVideo === 1) {
+
+        soundButton.classList.remove(
+          "hidden"
+        );
+
+      }
+
+    }
+
+  }
+
+
+  /* =========================
+     بدء الكرت
+  ========================= */
+
+  function startSequence() {
+
+    if (sequenceStarted) {
+      return;
+    }
+
+    sequenceStarted =
+      true;
+
+
+    /*
+    إخفاء الغلاف بالكامل
+    */
+
+    coverScreen.classList.add(
+      "hidden"
+    );
+
+
+    /*
+    إظهار الفيديو فقط
+    */
+
+    videoScreen.classList.remove(
+      "hidden"
+    );
+
+
+    currentVideo =
+      0;
+
+
+    playCurrentVideo();
+
+  }
+
+
+  openButton.addEventListener(
+    "click",
+    startSequence
+  );
+
+
+  openButton.addEventListener(
+    "touchend",
+    function (event) {
+
+      event.preventDefault();
+
+      startSequence();
+
+    },
+    {
+      passive: false
+    }
+  );
+
+
+  /* =========================
+     زر الصوت
+  ========================= */
+
+  soundButton.addEventListener(
+    "click",
+    function () {
+
+      openingVideo.muted =
+        false;
+
+      openingVideo.volume =
+        1;
+
+      openingVideo
+        .play()
+        .catch(function () {});
+
+
+      soundButton.classList.add(
+        "hidden"
+      );
+
+    }
+  );
+
+
+  /* =========================
+     بعد انتهاء كل فيديو
+  ========================= */
+
+  openingVideo.addEventListener(
+    "ended",
+    function () {
+
+      currentVideo += 1;
+
+
+      /*
+      إذا يوجد فيديو آخر
+      شغله مباشرة
+      */
+
+      if (
+        currentVideo <
+        videos.length
+      ) {
+
+        playCurrentVideo();
+
+      }
+
+      else {
+
+        /*
+        بعد انتهاء الفيديوهين:
+        نغلق شاشة الفيديو
+        ثم نظهر الكرت فقط
+        */
+
+        videoScreen.classList.add(
+          "hidden"
+        );
+
+
+        invitation.style.display =
+          "block";
+
+
+        dotsContainer.style.display =
+          "flex";
+
+
+        invitation.scrollTop =
+          0;
+
+
+        activateDot(0);
+
+      }
+
+    }
+  );
+
+
+  /* =========================
+     تحديث نقاط التنقل
+  ========================= */
+
+  let scrollLocked =
+    false;
+
+
+  invitation.addEventListener(
+    "scroll",
+    function () {
+
+      if (scrollLocked) {
+        return;
+      }
+
+
+      scrollLocked =
+        true;
+
+
+      requestAnimationFrame(
+        function () {
+
+          const pageHeight =
+            invitation.clientHeight ||
+            1;
+
+
+          let index =
+            Math.round(
+              invitation.scrollTop /
+              pageHeight
+            );
+
+
+          index =
+            Math.max(
+              0,
+              Math.min(
+                pages.length - 1,
+                index
+              )
+            );
+
+
+          activateDot(index);
+
+
+          scrollLocked =
+            false;
+
+        }
+      );
+
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  /* =========================
+     العد التنازلي
+     7 يوليو 2027
+     الساعة 7 مساءً
+  ========================= */
+
+  const eventDate =
+    new Date(
+      2027,
+      6,
+      7,
+      19,
+      0,
+      0
+    );
+
+
+  function updateCountdown() {
+
+    let difference =
+      eventDate -
+      new Date();
+
+
+    if (difference < 0) {
+
+      difference =
+        0;
+
+    }
+
+
+    const days =
+      Math.floor(
+        difference /
+        86400000
+      );
+
+
+    difference %=
+      86400000;
+
+
+    const hours =
+      Math.floor(
+        difference /
+        3600000
+      );
+
+
+    difference %=
+      3600000;
+
+
+    const minutes =
+      Math.floor(
+        difference /
+        60000
+      );
+
+
+    difference %=
+      60000;
+
+
+    const seconds =
+      Math.floor(
+        difference /
+        1000
+      );
+
+
+    document
+      .getElementById("days")
+      .textContent =
+      String(days)
+        .padStart(2, "0");
+
+
+    document
+      .getElementById("hours")
+      .textContent =
+      String(hours)
+        .padStart(2, "0");
+
+
+    document
+      .getElementById("minutes")
+      .textContent =
+      String(minutes)
+        .padStart(2, "0");
+
+
+    document
+      .getElementById("seconds")
+      .textContent =
+      String(seconds)
+        .padStart(2, "0");
+
+  }
+
+
+  updateCountdown();
+
+
+  setInterval(
+    updateCountdown,
+    1000
+  );
+
+})();
+
+</script>
+
+</body>
+</html>
